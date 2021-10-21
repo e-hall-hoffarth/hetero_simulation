@@ -30,7 +30,11 @@ def find_equilibrium_prices(n_products, n_assets, n_firms, n_agents, theta, alph
     firms = (jax.random.gamma(key, theta, shape=(n_firms,)),
              jax.random.beta(key, alpha, beta, shape=(n_firms,)),
              jnp.zeros((n_firms, 1)).astype(jnp.int32))
-    agents = jnp.exp(scale * jax.random.normal(key, (n_agents, n_assets)))
+
+    assets = jnp.exp(scale * jax.random.normal(key, (n_agents, n_assets)))
+    sigmas = 2 + 0.1 * jax.random.normal(key, (n_agents, 1))
+    agents = jnp.concatenate((assets, sigmas), axis=1)
+
     log_prices = jnp.zeros((n_products,))
     e = error(firms, agents, n_goods, T)
 
