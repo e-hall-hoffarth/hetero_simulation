@@ -19,8 +19,8 @@ def error(firms, agents, n_goods, T):
     return ret_fn
 
 
-def find_equilibrium_prices(n_products, n_assets, n_firms, n_agents, theta, alpha, beta, scale, mean_sigma, var_sigma,
-                            T, max_iter, step_size, tol, key):
+def find_equilibrium_prices(n_products, n_assets, n_firms, n_agents, theta, alpha, beta, mean_fc, var_fc,
+                            mean_sigma, var_sigma, scale, T, max_iter, step_size, tol, key):
     n_goods = n_products - n_assets
     i = 0
     err = jnp.inf
@@ -29,8 +29,10 @@ def find_equilibrium_prices(n_products, n_assets, n_firms, n_agents, theta, alph
 
     A = jax.random.gamma(key, theta, shape=(n_firms, 1))
     rts = jax.random.beta(key, alpha, beta, shape=(n_firms, 1))
-    outputs = jnp.zeros((n_firms, 1))
-    firms = jnp.concatenate((A, rts, outputs), axis=1)
+    fc = jnp.clip(mean_fc + var_fc * jax.random.normal(key, shape=(n_firms, 1)),
+                  jnp.zeros((n_firms, 1)), None)
+    outputs = jnp.repeat(jnp.arange(n_goods), n_firms // n_goods).reshape(-1, 1)
+    firms = jnp.concatenate((A, rts, fc, outputs), axis=1)
 
     assets = jnp.exp(scale * jax.random.normal(key, (n_agents, n_assets)))
     sigmas = jnp.clip(mean_sigma + var_sigma * jax.random.normal(key, (n_agents, 1)),
