@@ -31,9 +31,11 @@ def agent_optimal_choice(n, T, agent, R):
     def ret_fn(ap, cp):
         av = jnp.dot(ap, agent[:-1])
         r = R - 1
-        apv = ((1-(r**T))/(1-r)) * av
-        c = jnp.ones((T * n,))
-        optim_result_scaled = optimize.minimize(jit_bellman, c, (agent[-1], T, R, cp), method='BFGS')
+        factor = ((1-(r**T))/(1-r))
+        apv = factor * av
+        c_init = jnp.ones((T * n,))
+        optim_result_scaled = optimize.minimize(jit_bellman, c_init, (agent[-1], T, R, cp),
+                                                method='BFGS', options={'line_search_maxiter': 10000, 'gtol': 1e-2})
         result_scaled = optim_result_scaled.x.reshape(T, -1)
 
         result = (result_scaled * (apv / jnp.sum(jnp.dot(result_scaled, cp))))
