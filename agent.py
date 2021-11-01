@@ -3,16 +3,22 @@ import jax.numpy as jnp
 from jax.scipy import optimize
 
 
+def log_utility():
+    return lambda c: jnp.sum(jnp.log(c))
+
+
 def disc_log_utility(B):
-    return lambda c, t: jnp.multiply(jnp.power(B, t), jnp.sum(jnp.log(c)))
+    u = log_utility()
+    return lambda c, t: jnp.multiply(jnp.power(B, t), u(c))
+
+
+def ces_utility(sigma):
+    return lambda c: jnp.power(jnp.sum(jnp.power(c, ((sigma - 1)/sigma))), (sigma/(sigma - 1)))
 
 
 def disc_ces_utility(B, sigma):
-    return lambda c, t: jnp.multiply(jnp.power(B, t),
-                                        jnp.power(
-                                            jnp.sum(jnp.power(c, ((sigma - 1)/sigma))),
-                                            (sigma/(sigma - 1))
-                                     ))
+    u = ces_utility(sigma)
+    return lambda c, t: jnp.multiply(jnp.power(B, t), u(c))
 
 
 @jax.tree_util.Partial(jax.jit, static_argnums=(2,))
