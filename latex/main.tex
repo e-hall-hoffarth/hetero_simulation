@@ -1,0 +1,106 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\graphicspath{{./images/}}
+
+\usepackage[
+  backend=biber,
+  style=apa,
+  citestyle=apa
+]{biblatex}
+\addbibresource{references.bib}
+
+\title{Approximating High-Dimensional Economic State-Spaces with Deep Neural Embeddings}
+\author{Emmet Hall-Hoffarth}
+\date{\today}
+
+\begin{document}
+\maketitle
+    
+\begin{abstract}
+
+Placeholder
+
+\end{abstract}
+
+
+\section{Introduction}
+
+Ever since the seminal work of \citeauthor{krusell1998income} (\citeyear{krusell1998income}) there has been an explosion of interest in stochastic macroeconomic models that represent the behaviour of heterogeneous agents. However, there is a fundamental challenge associated with solving these models known as the \textit{curse of dimensionality} \parencite{dreyfus1962applied}, that computational solutions to optimization problems quickly become intractable as the state-space increases in size. This problem arises because the optimal decision of any rational, forward-looking agent in a non-trivial heterogeneous agent economy depends, at least in principle, on the state(s) of every other agent. In their paper \citeauthor{krusell1998income} (\citeyear{krusell1998income}) overcome this by showing in their setting agents are sufficiently rational (they make sufficiently accurate predictions of future states) if their perceived state-space consists only of their own asset holdings and the mean aggregate asset holdings in the economy. However, this property is unlikely to hold as the literature begins to consider increasingly complex models \parencite{krusell2006quantitative}, and therefore, new techniques will be needed. 
+
+More recently, papers by \citeauthor{duarte2018machine} (\citeyear{duarte2018machine}) and \citeauthor{azinovic2019deep} (\citeyear{azinovic2019deep}) have applied machine learning techniques in order to assuage some of these concerns. In particular, in the case of the former, the (continuous time) value function is parameterized as a neural network. Since (deep) neural networks are particularly well suited to high-dimensional and highly non-linear problems, they provide an excellent functional approximation of the value function that can then be estimated via stochastic gradient descent. Furthermore, since this is still a full parameterization, it avoids some of the limitations involved with projection-based methods. This line of reasoning is suggestive of the potential for other machine learning techniques for solving macroeconomic models with high-dimensional state-spaces. In particular, this paper will consider the introduction of (neural) embeddings similar to those found in \citeauthor{bengio2003neural} (\citeyear{bengio2003neural}). 
+
+In machine-learning embeddings are generally used for word or image processing, however, more broadly they are useful for tackling high-dimensional, yet sparse, input data. They do so by mapping the high-dimensional input data into a (much) lower dimensional and dense \textit{latent space}. One popular implementation, as in \citeauthor{bengio2003neural} (\citeyear{bengio2003neural}), is to linearly map into the latent space with an \textit{embedding matrix}, and then optionally feed the output through a neural network to handle potential non-linearities in the output signal. Thus, embedding models are well suited for solving heterogeneous agent stochastic macroeconomic models which have both high-dimensional and sparse state-spaces, and potentially strongly non-linear responses.
+
+This paper is organized as follows: Section \ref{lit_review} will cover contextual information on both heterogeneous agent models as well as, (deep) neural embeddings. Section \ref{method} will introduce embedding models as a solution method to economic models in a general setting. Section \ref{application} will introduce a particular economic model which will be estimated using this technique. The final two sections will present the results of this application and give some remarks.
+
+\section{Literature Review} \label{lit_review}
+
+\section{Method} \label{method}
+
+The goal is to approximate the (Bellman) value function 
+
+\begin{equation}
+    v(X) = \underset{C, X^\prime}{\max} \text{  } u(C) + \beta v(X^\prime) 
+\end{equation}
+
+where $C \in \mathbb{R}^p$ is a set of controls and $X \in \mathbb{R}^n$ is a set of state variables in a finite, yet high dimensional setting where exact solution methods are infeasible. In order to do so we will reduce the dimension of $X$ using an embedding matrix and make a (flexible) parametric assumption about $v(.)$. The former is achieved by introducing a parameter matrix $A \in \mathbb{R}^{m \times n}$ such that $\widetilde{X} \equiv AX$ where $m < n$. The latter can be achieved in a number of ways, as this is a common component of simulation based solution methods. For example, the approach of \citeauthor{den1996heterogeneity} (\citeyear{den1996heterogeneity}) is to use an $n$-th order polynomial approximation. Instead, here we will follow the approach of \citeauthor{duarte2018machine} (\citeyear{duarte2018machine}) and approximate the value function with a dense feed-forward neural network. In particular, we approximate $v(.)$ as $\hat{v}(.)$ where
+
+\begin{align}
+    v(X) \approx \hat{v}(X ; \theta) &= f(g_k(g_{k-1}(... (g_0(AX))))) \\
+    f(x) &= w_k x + b_k \\
+    g_i(x) &= \max \{ 0, w_i x + b_i \} \\
+    w_i &\in \mathbb{R}^m \\
+    b_i &\in \mathbb{R}
+\end{align}
+
+where $\theta \in \Theta \equiv \mathbb{R}^{(n + k) m + k}$ refers to the set of all parameters $A$, $w_i$, and $b_i$. As a result of this parameterization there are a total of $(n + k) m + k$ parameters; $m \times n$ from the (unrestricted) matrix $A$ and $k (m + 1)$ from the parameters $w_i$ and $b_i$ of the neural network. An advantage of this embedding-based approach in comparison to \citeauthor{duarte2018machine} (\citeyear{duarte2018machine}) is already clear --- since $m$ is generally chosen to be small relative to $n$, the neural network here has many fewer parameters for a given level of expressiveness (depth) $k$. Nonetheless, overall there is still a large number of parameters here, so as in the majority of the machine-learning literature, they will be estimated using Stochastic Gradient Descent (SGD)
+
+In particular, estimation proceeds as follows. Since the Bellman equation is a contraction mapping, its left-hand and right-hand sides are equal at the solution, so any reasonable approximation should also possess this property. Therefore, define the (approximate) Bellman error as:
+
+\begin{equation}
+    \epsilon^2 = (\hat{v}(X ; \theta) - (\underset{C, X^\prime}{\max} \text{  } u(C) + \beta \hat{v}(X^\prime; \theta)))^2
+\end{equation}
+
+The goal is to minimize this error, and ideally reduce it to zero. Let $C^*$, $X^{\prime *}$ be the optimal control in the intratemporal optimization problem, and resulting future state respectively. Then, since we have fully parameterized $\hat{v}$, the Jaccoibian $J_{\epsilon^2,\theta}$ is defined. Indeed, by application of chain rule it is exactly:
+
+\begin{equation}
+    J_{\epsilon^2,\theta} = - 2 (\hat{v}_\theta(X; \theta) - \beta \hat{v}_\theta(X^{\prime *} ; \theta))
+\end{equation}
+
+Where
+
+\begin{equation}
+\begin{aligned}
+    \hat{v}_\theta(Z; \theta) = & f^\prime(g_k(g_{k-1}(\dots(g_0(AZ))))) \times \\
+             & f(g_k^\prime(g_{k-1}(\dots(g_0(AZ))))) \times \\
+             & \dots \\
+             & f(g_k(g_{k-1}(\dots(g^\prime_0(AZ))))) \times \\
+             & f(g_k(g_{k-1}(\dots(g_0(AZ)))))A
+\end{aligned}
+\end{equation}
+
+For $Z \in {X, X^{\prime *}}$
+
+This object, cumbersome as it may seem, can be calculated quickly and efficiently with modern machine learning software using backpropogation. Given that this gradient can be calculated, we can estimate the optimal parameters by SGD. Given some initial guess $\theta_0$, we iteratively update successive guesses of $\theta_t$ according to:
+
+\begin{equation}
+    \theta_{t+1} = \theta_t - \delta \frac{1}{n} \sum_{i=1}^{n} J_{\epsilon_i^2,\theta}
+\end{equation}
+
+where $\delta$ is the \textit{learning rate}, and $i \in {1, ..., n}$ are a random subset of the indicies of $X$, until the gradient $J_{\epsilon_i^2,\theta}$ is below some acceptance threshold. This is the simplest form of SGD, however, in practice more sophisticated algorithms have been developed which take into account, among other things, the previous gradients, higher order derivatives, and the number of iterations undertaken so far, in an effort to optimally adjust the learning rate for each iteration. The application in this paper will make use of one such algorithm, known as the Adam optimizer \parencite{kingma2014adam}.
+
+\section{Application} \label{application}
+
+\section{Results} \label{results}
+
+\section{Conclusion} \label{conclusion}
+
+
+
+\newpage
+\printbibliography
+
+\end{document}
