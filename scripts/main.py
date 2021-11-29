@@ -1,7 +1,7 @@
 import argparse
 import jax
 import jax.numpy as jnp
-from optimization import *
+from lib.hetero_simulation.archive.optimization import *
 import time
 from datetime import timedelta
 
