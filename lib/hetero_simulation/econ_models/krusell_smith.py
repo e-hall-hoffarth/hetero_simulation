@@ -26,45 +26,29 @@ config = {
 
 # ML parameters
 n = 100
-mb = 32
-n_epoch = 30000
+mb = 100
+n_epoch = 5000
 n_iter = n // mb
 n_forward = 10
 
 k = 5 # number of agents (~ size of state space)
 m = 32 # embedding dimension
-config['p0'] = 1. # weight on envelope condition
-config['p1'] = 1. # weight on k-t conditions
-config['p2'] = 1. # weight on prediction error
 nn_shapes = jnp.array([m, 2 * m, 2 * m, m])
 
 
 @jax.jit
-def opt_control(params, X, E, Z, e, x):
+def neural_network(params, X, E, Z, e, x):
     X_tilde = jnp.concatenate([X.reshape(1, -1),
                                E.reshape(1, -1),
                                Z.reshape(1, -1),
                                e.reshape(1, -1),
                                x.reshape(1, -1)], axis=1)
-    l1 = tanh(X_tilde, params['cw0'], params['cb0'])
-    l2 = tanh(l1, params['cw1'], params['cb1'])
-    l3 = tanh(l2, params['cw2'], params['cb2'])
-    l4 = tanh(jnp.concatenate((l3, e[..., jnp.newaxis], x[..., jnp.newaxis])), params['cw3'], params['cb3'])
-    return jnp.squeeze(x * ((tanh(l4, params['cwf'], params['cbf']) + 1) / 2))
-
-
-@jax.jit
-def lagrange_multiplier(params, X, E, Z, e, x):
-    X_tilde = jnp.concatenate([X.reshape(1, -1),
-                               E.reshape(1, -1),
-                               Z.reshape(1, -1),
-                               e.reshape(1, -1),
-                               x.reshape(1, -1)], axis=1)
-    l1 = tanh(X_tilde, params['lw0'], params['lb0'])
-    l2 = tanh(l1, params['lw1'], params['lb1'])
-    l3 = tanh(l2, params['lw2'], params['lb2'])
-    l4 = tanh(jnp.concatenate((l3, e[..., jnp.newaxis], x[..., jnp.newaxis])), params['lw3'], params['lb3'])
-    return jnp.squeeze(softplus(l4, params['lwf'], params['lbf']))
+    l1 = tanh(X_tilde, params['w0'], params['b0'])
+    l2 = tanh(l1, params['w1'], params['b1'])
+    # l3 = tanh(l2, params['w2'], params['b2'])
+    # l4 = tanh(jnp.concatenate((l3, e[..., jnp.newaxis], x[..., jnp.newaxis])), params['w3'], params['b3'])
+    return jnp.array([jnp.squeeze(x * ((tanh(l2, params['cwf'], params['cbf']) + 1) / 2)),
+                      jnp.squeeze(softplus(l2, params['lwf'], params['lbf']))])
 
 
 @jax.jit
@@ -72,62 +56,65 @@ def fischer_burmeister(a, b):
     return a + b - jnp.sqrt(jnp.power(a, 2) + jnp.power(b, 2))
 
 
-# Continuous exo states
 @jax.jit
 def prices(config, X, Z, E):
     sumk = jnp.sum(X)
     sumexpl = jnp.sum(jnp.exp(E))
-    w = (1 - alpha) * jnp.exp(Z) * jnp.power(sumk, config['alpha'])
-    r = 1 - config['delta'] + config['alpha'] * jnp.exp(Z) * jnp.power(sumk, alpha - 1) * sumexpl
+    w = (1 - config['alpha']) * jnp.exp(Z) * jnp.power(sumk, config['alpha']) * jnp.power(sumexpl, -1 * config['alpha'])
+    r = 1 - config['delta'] + config['alpha'] * jnp.exp(Z) * jnp.power(sumk, config['alpha'] - 1) * jnp.power(sumexpl, 1 - config['alpha'])
     return r, w
 
 
 @jax.jit
-def batch_loss(params, config, Xs, Zs, Es, keys):
-    n = Xs.shape[0]
-    Xs = jnp.concatenate((Xs, Xs), axis=0)
-    Zs = jnp.concatenate((Zs, Zs), axis=0)
-    Es = jnp.concatenate((Es, Es), axis=0)
-
-    Z1s, E1s = next_state(Zs, Es, config, keys)
-    rs, ws = jax.vmap(lambda X, Z, E: prices(config, X, Z, E))(Xs, Zs, Es)
-    xs = jax.vmap(lambda X, E, rt, wt: jax.vmap(lambda x, e: (rt * x) + (wt * jnp.exp(e)))(X, E))(Xs, Es, rs, ws).reshape(Xs.shape[0], -1)
-    cs = jax.vmap(lambda X, Z, E: jax.vmap(lambda i: opt_control(params, X, E, Z, E[i], X[i]))(jnp.arange(k)))(xs, Zs, Es)
-    c_rels = cs / xs
-    lms = jax.vmap(lambda X, Z, E: jax.vmap(lambda i: lagrange_multiplier(params, X, E, Z, E[i], X[i]))(jnp.arange(k)))(xs, Zs, Es)
-    X1s = xs - cs
-    r1s, w1s = jax.vmap(lambda X, Z, E: prices(config, X, Z, E))(X1s, Z1s, E1s)
-    x1s = jax.vmap(lambda X, E, rt, wt: jax.vmap(lambda x, e: (rt * x) + (wt * jnp.exp(e)))(X, E))(X1s, E1s, r1s, w1s).reshape(Xs.shape[0], -1)
-    c1s = jax.vmap(lambda X, Z, E: jax.vmap(lambda i: opt_control(params, X, E, Z, E[i], X[i]))(jnp.arange(k)))(x1s, Z1s, E1s)
+def loss(params, config, Xs, Zs, Es, key):
+    Z1s, E1s = next_state(Zs, Es, config, key)
+    Rs, Ws = jax.vmap(lambda X, Z, E: prices(config, X, Z, E))(Xs, Zs, Es)
+    ws = jax.vmap(lambda X, E, R, W: jax.vmap(lambda x, e: (R * x) + (W * jnp.exp(e)))(X, E))(Xs, Es, Rs, Ws)
+    outputs = jax.vmap(
+        lambda X, Z, E, w: jax.vmap(lambda i: neural_network(params, X, E, Z, E[i], w[i]))(jnp.arange(k)))(Xs, Zs, Es,
+                                                                                                           ws)
+    cs = outputs[..., 0]
+    lms = outputs[..., 1]
+    c_rels = cs / ws
+    X1s = ws - cs
+    R1s, W1s = jax.vmap(lambda X, Z, E: prices(config, X, Z, E))(X1s, Z1s, E1s)
+    w1s = jax.vmap(lambda X, E, R, W: jax.vmap(lambda x, e: (R * x) + (W * jnp.exp(e)))(X, E))(X1s, E1s, R1s, W1s)
+    c1s = jax.vmap(
+        lambda X, Z, E, w: jax.vmap(lambda i: neural_network(params, X, E, Z, E[i], w[i])[0])(jnp.arange(k)))(X1s, Z1s,
+                                                                                                              E1s, w1s)
 
     u = lambda c: log_utility()(c)
-    gs = jax.vmap(lambda r, cs: jax.vmap(lambda c: config['beta'] * r * jax.grad(u)(c))(cs))(r1s, c1s)
+    gs = jax.vmap(lambda R, cs: jax.vmap(lambda c: config['beta'] * R * jax.grad(u)(c))(cs))(R1s, c1s)
     ups = jax.grad(u)(cs)
+    g_diff = jax.vmap(lambda g, up, lm: (g / up) - lm)(gs.reshape(-1, 1), ups.reshape(-1, 1), lms.reshape(-1, 1))
 
-    # g_diff = ((gs / ups) - lms)
-    g_diff = jax.vmap(lambda g, up, lm: (g / up) - lm)(gs, ups, lms)
-    # g_diff = gs - ups
-    g2 = jnp.mean(jax.vmap(lambda x, y: jnp.sum(x * y))(g_diff[:n], g_diff[n:]))
+    lm_diff = jax.vmap(lambda c, lm: fischer_burmeister(1 - c, 1 - lm))(c_rels.reshape(-1, 1), lms.reshape(-1, 1))
 
-    kt_cond = jnp.mean(jax.vmap(lambda c, lm: fischer_burmeister(1-c, 1-lm)**2)(c_rels.reshape(-1, 1), lms.reshape(-1, 1)))
-
-    return config['p0'] * g2 + config['p1'] * kt_cond, (g2, kt_cond, c_rels, Z1s[:n], E1s[:n], X1s[:n])
-    # return g2, (g2, c_rels, Z1s[:n], E1s[:n], X1s[:n])
+    return g_diff, lm_diff, c_rels, X1s, Z1s, E1s
 
 
 @jax.jit
-def next_state(Zs, Es, config, keys):
-    Zs_prime = jax.vmap(lambda z, k: config['rho_z'] * z + config['sigma_z'] * jax.random.normal(k))(Zs, keys[:, 0])
-    Es_prime = jax.vmap(lambda e, k: config['rho_e'] * e + config['sigma_e'] * jax.random.normal(k))(Es.reshape(-1), keys[:, 1:].reshape(-1, 2)).reshape(Es.shape)
+def batch_loss(params, config, Xs, Zs, Es, keys):
+    g_diff_1, lm_diff_1, c_rels, X1s, Z1s, E1s = loss(params, config, Xs, Zs, Es, keys[0])
+    g_diff_2, lm_diff_2, c_rels, X1s, Z1s, E1s = loss(params, config, Xs, Zs, Es, keys[1])
+    g2 = g_diff_1 * g_diff_2
+    lm2 = lm_diff_1 * lm_diff_2
+
+    return jnp.squeeze(jnp.mean(g2 + lm2, axis=0)), (jnp.squeeze(jnp.mean(g2, axis=0)), jnp.squeeze(jnp.mean(lm2, axis=0)), c_rels, Z1s, E1s, X1s)
+
+
+@jax.jit
+def next_state(Zs, Es, config, key):
+    Zs_prime = config['rho_z'] * Zs + config['sigma_z'] * jax.random.normal(key, shape=(Zs.shape[0],))
+    Es_prime = config['rho_e'] * Es + config['sigma_e'] * jax.random.normal(key, shape=(Es.shape[0], k))
     return Zs_prime, Es_prime
 
 
 def simulate_state_forward(params, config, Xs, Zs, Es, key, n_forward):
     for _ in range(n_forward):
-        keys = jax.random.split(key, 2 * (k + 1)).reshape(2, (k + 1), 2)
-        keys = jnp.repeat(keys, n // 2, axis=0)
+        keys = jax.random.split(key, 2)
         Zs, Es, Xs = batch_loss(params, config, Xs, Zs, Es, keys)[1][-3:]
-        key = keys[-1, -1]
+        key = keys[-1]
     return Xs, Zs, Es, key
 
 
@@ -147,23 +134,15 @@ w00 = scale * jnp.ones(nn_shapes[0] * (2 * k + 3)).reshape(2 * k + 3, nn_shapes[
 w01 = scale * jnp.ones(nn_shapes[0] * nn_shapes[1]).reshape(nn_shapes[0], nn_shapes[1])
 w02 = scale * jnp.ones(nn_shapes[1] * nn_shapes[2]).reshape(nn_shapes[1], nn_shapes[2])
 w03 = scale * jnp.ones((nn_shapes[2] + 2) * nn_shapes[3]).reshape(nn_shapes[2] + 2, nn_shapes[3])
-w0f = scale * jnp.ones(nn_shapes[3]).reshape(nn_shapes[3], 1)
+w0f = scale * jnp.ones(nn_shapes[1]).reshape(nn_shapes[1], 1)
 b00 = scale * jnp.ones(nn_shapes[0]).reshape(1, nn_shapes[0])
 b01 = scale * jnp.ones(nn_shapes[1]).reshape(1, nn_shapes[1])
 b02 = scale * jnp.ones(nn_shapes[2]).reshape(1, nn_shapes[2])
 b03 = scale * jnp.ones(nn_shapes[3]).reshape(1, nn_shapes[3])
 b0f = scale * jnp.ones(1).reshape(1, 1)
 
-c_params0 = {
-    'cw0': w00, 'cw1': w01, 'cw2': w02, 'cw3': w03, 'cwf': w0f, 'cb0': b00, 'cb1': b01, 'cb2': b02, 'cb3': b03, 'cbf': b0f
-}
-
-l_params0 = {
-    'lw0': w00, 'lw1': w01, 'lw2': w02, 'lw3': w03, 'lwf': w0f, 'lb0': b00, 'lb1': b01, 'lb2': b02, 'lb3': b03, 'lbf': b0f
-}
-
 params0 = {
-    **c_params0, **l_params0
+    'w0': w00, 'w1': w01, 'w2': w02, 'w3': w03, 'cwf': w0f, 'lwf': w0f, 'b0': b00, 'b1': b01, 'b2': b02, 'b3': b03, 'cbf': b0f, 'lbf': b0f
 }
 
 
@@ -172,7 +151,7 @@ def training_loop(opt_state, tol=1e-10, max_iter=10 ** 4):
     key = jax.random.PRNGKey(np.random.randint(1, int(1e8)))
     val_loss = jnp.inf
     grad = {'0': jnp.inf}
-    opt_init, opt_update, get_params = adam(step_size=0.01)
+    opt_init, opt_update, get_params = adam(step_size=0.001)
     params = get_params(opt_state)
 
     Xs, Zs, Es, key = generate_random_state(params, config, key, n_forward=n_forward)
@@ -180,9 +159,8 @@ def training_loop(opt_state, tol=1e-10, max_iter=10 ** 4):
     while j < max_iter and max([jnp.max(jnp.abs(v)) for k, v in grad.items()]) > tol and jnp.abs(val_loss) > tol:
         jj = 0
         while jj < n_iter:
-            keys = jax.random.split(key, 2 * (k + 1)).reshape(2, k + 1, 2)
-            keys = jnp.repeat(keys, mb // 2, axis=0)
-            key = keys[-1, -1]
+            keys = keys = jax.random.split(key, 2)
+            key = keys[-1]
             params = get_params(opt_state)
 
             sample = jax.random.choice(jax.random.PRNGKey(np.random.randint(1, int(1e8))), jnp.arange(n // 2), shape=(mb // 2,))
