@@ -25,15 +25,15 @@ config = {
 }
 
 # ML parameters
-n = 100
-mb = 100
-n_epoch = 5000
+n = 1600
+mb = 256
+n_epoch = 30000
 n_iter = n // mb
 n_forward = 10
 
 k = 5 # number of agents (~ size of state space)
-m = 32 # embedding dimension
-nn_shapes = jnp.array([m, 2 * m, 2 * m, m])
+m = 64 # embedding dimension
+nn_shapes = jnp.array([m, m, m, m])
 
 
 @jax.jit
@@ -43,12 +43,12 @@ def neural_network(params, X, E, Z, e, x):
                                Z.reshape(1, -1),
                                e.reshape(1, -1),
                                x.reshape(1, -1)], axis=1)
-    l1 = tanh(X_tilde, params['w0'], params['b0'])
-    l2 = tanh(l1, params['w1'], params['b1'])
+    l1 = sigmoid(X_tilde, params['w0'], params['b0'])
+    l2 = sigmoid(l1, params['w1'], params['b1'])
     # l3 = tanh(l2, params['w2'], params['b2'])
     # l4 = tanh(jnp.concatenate((l3, e[..., jnp.newaxis], x[..., jnp.newaxis])), params['w3'], params['b3'])
-    return jnp.array([jnp.squeeze(x * ((tanh(l2, params['cwf'], params['cbf']) + 1) / 2)),
-                      jnp.squeeze(softplus(l2, params['lwf'], params['lbf']))])
+    return jnp.array([jnp.squeeze(x * sigmoid(l2, params['cwf'], params['cbf'])),
+                      jnp.squeeze(exp(l2, params['lwf'], params['lbf']))])
 
 
 @jax.jit
@@ -71,8 +71,7 @@ def loss(params, config, Xs, Zs, Es, key):
     Rs, Ws = jax.vmap(lambda X, Z, E: prices(config, X, Z, E))(Xs, Zs, Es)
     ws = jax.vmap(lambda X, E, R, W: jax.vmap(lambda x, e: (R * x) + (W * jnp.exp(e)))(X, E))(Xs, Es, Rs, Ws)
     outputs = jax.vmap(
-        lambda X, Z, E, w: jax.vmap(lambda i: neural_network(params, X, E, Z, E[i], w[i]))(jnp.arange(k)))(Xs, Zs, Es,
-                                                                                                           ws)
+        lambda X, Z, E, w: jax.vmap(lambda i: neural_network(params, X, E, Z, E[i], w[i]))(jnp.arange(k)))(Xs, Zs, Es, ws)
     cs = outputs[..., 0]
     lms = outputs[..., 1]
     c_rels = cs / ws
