@@ -14,6 +14,7 @@ a = 0.5
 b = 0.2
 
 # Preference and production parameters
+k = 5 # number of agents (~ size of state space)
 alpha = 0.36
 beta = 0.96
 delta = 0.025
@@ -21,11 +22,13 @@ rho_z = 0.95
 rho_e = 0.9
 sigma_z = 0.01
 sigma_e = 0.2 * jnp.sqrt(1 - rho_e**2)
-discrete = False
+discrete = True
+prefs = 2 + 0.5 * jax.random.normal(jax.random.PRNGKey(6), shape=(k,))
 
 config = {
     'alpha': alpha, 'beta': beta, 'delta': delta,
-    'sigma_z': sigma_z, 'sigma_e': sigma_e, 'rho_z': rho_z, 'rho_e': rho_e, 'discrete': discrete
+    'sigma_z': sigma_z, 'sigma_e': sigma_e, 'rho_z': rho_z, 'rho_e': rho_e, 'discrete': discrete,
+    'prefs': prefs
 }
 
 # Transition parameters
@@ -48,7 +51,6 @@ n_epoch = 30000
 n_iter = 2 * (n // mb)
 n_forward = 100
 
-k = 5 # number of agents (~ size of state space)
 m = 64 # embedding dimension
 nn_shapes = jnp.array([m, m, m, m])
 
@@ -115,6 +117,9 @@ Peps_gb = jnp.array([[p11_gb, p10_gb],
 Peps_bg = jnp.array([[p11_bg, p10_bg],
                      [p01_bg, p00_bg]])
 
+Peps = jnp.array([[Peps_gg, Peps_gb],
+                  [Peps_bg, Peps_bb]])
+
 # Potential states
 zs = jnp.array([z_g, z_b])
 es = jnp.array([1, 0])
@@ -163,7 +168,7 @@ def next_X(params, config, X, Z, E):
 
 @jax.jit
 def loss(params, config, X, Z, E, key):
-    Z1, E1 = next_state(Z, E, key)
+    Z1, E1 = next_state(Z, E, config, key)
     R, W = prices(config, X, Z, E)
     w = jax.vmap(lambda x, e: (R * x) + (W * e))(X, E)
     outputs = jax.vmap(lambda i: neural_network(params, X, E, Z, E[i], w[i]))(jnp.arange(k))
@@ -175,9 +180,10 @@ def loss(params, config, X, Z, E, key):
     w1 = jax.vmap(lambda x, e: (R * x) + (W * e))(X1, E1)
     c1 = jax.vmap(lambda i: neural_network(params, X1, E1, Z1, E1[i], w1[i])[0])(jnp.arange(k))
 
-    u = lambda c: log_utility()(c)
-    g = jax.vmap(lambda c: config['beta'] * R1 * jax.grad(u)(c))(c1)
-    up = jax.grad(u)(c)
+    g = jax.vmap(lambda p, c: config['beta'] * R1 * jax.grad(ces_utility(p))(c))(config['prefs'], c1)
+    up = jax.vmap(lambda p, c: jax.grad(ces_utility(p))(c))(config['prefs'], c)
+    # g = jax.vmap(lambda c: config['beta'] * R1 * jax.grad(log_utility())(c))(c1)
+    # up = jax.vmap(lambda c: jax.grad(log_utility())(c))(c)
     g_diff = jax.vmap(lambda g, up, lm: (g / up) - lm)(g.reshape(-1, 1), up.reshape(-1, 1), lm.reshape(-1, 1))
     lm_diff = jax.vmap(lambda c, lm: fischer_burmeister(1 - c, 1 - lm))(c_rel.reshape(-1, 1), lm.reshape(-1, 1))
 
@@ -195,20 +201,13 @@ def batch_loss(params, config, Xs, Zs, Es, keys):
 
 
 @jax.jit
-def next_state(Z, E, key):
+def next_state(Z, E, config, key):
     keys = jax.random.split(key, (k + 1))
     Z_prime = jax.random.choice(keys[0], jnp.array([z_g, z_b]), p=(Z == z_g) * Pz[0] + (Z == z_b) * Pz[1])
     E_prime = jax.vmap(lambda e, k:
                        jax.random.choice(k,
                            jnp.array([1, 0]),
-                           p=(jnp.float32((Z == z_g) & (Z_prime == z_g) & (e == 1)) * Peps_gg[0] +\
-                              jnp.float32((Z == z_g) & (Z_prime == z_g) & (e == 0)) * Peps_gg[1] +\
-                              jnp.float32((Z == z_g) & (Z_prime == z_b) & (e == 1)) * Peps_gb[0] +\
-                              jnp.float32((Z == z_g) & (Z_prime == z_b) & (e == 0)) * Peps_gb[1] +\
-                              jnp.float32((Z == z_b) & (Z_prime == z_g) & (e == 1)) * Peps_bg[0] +\
-                              jnp.float32((Z == z_b) & (Z_prime == z_g) & (e == 0)) * Peps_bg[1] +\
-                              jnp.float32((Z == z_b) & (Z_prime == z_b) & (e == 1)) * Peps_bb[0] +\
-                              jnp.float32((Z == z_b) & (Z_prime == z_b) & (e == 0)) * Peps_bb[1]))) \
+                           p=Peps[((Z == z_b).astype(int), (Z_prime == z_b).astype(int), (e == 0).astype(int))]))\
                        (E, keys[1:])
     return Z_prime, E_prime
 
@@ -217,7 +216,7 @@ def simulate_state_forward(params, config, Xs, Zs, Es, key, n_forward):
     keys = jax.random.split(key, Zs.shape[0] * n_forward).reshape(n_forward, Zs.shape[0], 2)
     for i in range(n_forward):
         Xs = jax.vmap(next_X, in_axes=(None, None, 0, 0, 0))(params, config, Xs, Zs, Es)
-        Zs, Es = jax.vmap(next_state)(Zs, Es, keys[i])
+        Zs, Es = jax.vmap(next_state, in_axes=(0, 0, None, 0))(Zs, Es, config, keys[i])
     return Xs, Zs, Es, keys[-1, -1]
 
 
