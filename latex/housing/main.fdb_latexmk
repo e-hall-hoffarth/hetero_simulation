@@ -1,13 +1,13 @@
 # Fdb version 3
-["biber main"] 1642525936 "main.bcf" "main.bbl" "main" 1642526113
-  "main.bcf" 1642526080 124527 123471b4e1f4a87c185bd9e3d4b55d4f "pdflatex"
-  "references.bib" 1642464641 2970 274ae2e8e5de79d5cfb80e0ec108b435 ""
+["biber main"] 1642529544 "main.bcf" "main.bbl" "main" 1642529677
+  "main.bcf" 1642529677 124527 123471b4e1f4a87c185bd9e3d4b55d4f "pdflatex"
+  "references.bib" 1642526280 2970 274ae2e8e5de79d5cfb80e0ec108b435 ""
   (generated)
   "main.blg"
   "main.bbl"
-["pdflatex"] 1642526078 "/home/emmet/Documents/code/hetero_simulation/latex/housing/main.tex" "/home/emmet/Documents/code/hetero_simulation/latex/housing/main.pdf" "main" 1642526113
-  "/home/emmet/Documents/code/hetero_simulation/latex/housing/main.aux" 1642526080 3004 1e1e547161390e46be672912f6b7f52d ""
-  "/home/emmet/Documents/code/hetero_simulation/latex/housing/main.tex" 1642526112 6301 6a0aebe097a73eb330a628c7936f76f8 ""
+["pdflatex"] 1642529676 "/home/emmet/Documents/code/hetero_simulation/latex/housing/main.tex" "/home/emmet/Documents/code/hetero_simulation/latex/housing/main.pdf" "main" 1642529677
+  "/home/emmet/Documents/code/hetero_simulation/latex/housing/main.aux" 1642529677 3004 1e1e547161390e46be672912f6b7f52d ""
+  "/home/emmet/Documents/code/hetero_simulation/latex/housing/main.tex" 1642529676 6963 031ff6601515ac640e555a51c3e30742 ""
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1617738065 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1617738065 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1617738065 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -100,17 +100,17 @@
   "/usr/share/texmf-dist/tex/latex/logreq/logreq.sty" 1617689697 6187 b27afc771af565d3a9ff1ca7d16d0d46 ""
   "/usr/share/texmf-dist/tex/latex/url/url.sty" 1617738065 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1617738065 39911 2da6c67557ec033436fe5418a70a8a61 ""
-  "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1622386831 5045527 a0ef06d06af438d62994481e52c2af5f ""
-  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1622386790 2812668 31b7a4d8af517836c03cdf4de7566709 ""
-  "main.aux" 1642526080 3004 1e1e547161390e46be672912f6b7f52d "pdflatex"
-  "main.bbl" 1642525938 7910 c7f359d7a9ed18d59edaa8d205e9e20b "biber main"
-  "main.run.xml" 1642526080 2427 d1bfcd6d722f5bf4e724fdcb22d9bbf2 "pdflatex"
-  "main.tex" 1642526112 6301 6a0aebe097a73eb330a628c7936f76f8 ""
+  "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1632147410 5045527 a0ef06d06af438d62994481e52c2af5f ""
+  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1632147383 2812673 568070d4bc8771d5eecfe14948afff3a ""
+  "main.aux" 1642529677 3004 1e1e547161390e46be672912f6b7f52d "pdflatex"
+  "main.bbl" 1642529545 7910 c7f359d7a9ed18d59edaa8d205e9e20b "biber main"
+  "main.run.xml" 1642529677 2427 d1bfcd6d722f5bf4e724fdcb22d9bbf2 "pdflatex"
+  "main.tex" 1642529676 6963 031ff6601515ac640e555a51c3e30742 ""
   (generated)
   "/home/emmet/Documents/code/hetero_simulation/latex/housing/main.log"
-  "main.bcf"
-  "/home/emmet/Documents/code/hetero_simulation/latex/housing/main.pdf"
   "main.log"
+  "main.bcf"
   "main.aux"
   "main.run.xml"
   "main.pdf"
+  "/home/emmet/Documents/code/hetero_simulation/latex/housing/main.pdf"

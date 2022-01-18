@@ -45,19 +45,17 @@ The model contains a discrete mass (for sake of simulation) of $n$ agents, who i
 
 \begin{align}
   \underset{c_{it}, l_{it}, a_{it+1}}{max} V^{NA}_{it}(0, m_{it}, d_{it}) = &u_{i}(c_{it}, l_{it}) + \beta [ \nonumber \\ 
-  \mathbb{I}\{\omega^{NA}_{it} - p_t c_{it} \geq \phi p_t^a \} &V^A_{it+1}(\frac{a_{it+1}}{p^a_t}, \omega^{NA}_{it} - p_t c_{it} - p^a_t a_{it+1}, (1 - i_t) d_{it}) + \nonumber \\ 
-  \left(1 - \mathbb{I}\{\omega^{NA}_{it} - p_t c_{it} \geq \phi p_t^a \right) &V^{NA}_{it+1}(0, \omega^{NA}_{it} - p_t c_{it}, (1 - i_t) d_{it})] \label{vna}
+  \mathbb{I}\{\omega^{NA}_{it} - p_t c_{it} \geq \phi p_t^a \} &V^A_{it+1}(\frac{a_{it+1}}{p^a_t}, \omega^{NA}_{it} - p_t c_{it} - p^a_t a_{it+1}, (1 - i_t) d_{it} + p^a_t a_{it+1}) + \nonumber \\ 
+  \left(1 - \mathbb{I}\{\omega^{NA}_{it} - p_t c_{it} \geq \phi p_t^a \} \right) &V^{NA}_{it+1}(0, \omega^{NA}_{it} - p_t c_{it}, (1 - i_t) d_{it})] \label{vna}
 \end{align}
 
-The once an agent owns a non-zero amount of the asset they will benefit each period from amortization and any inflation that occurs in asset prices. However, they will also have to pay interest on their previous asset purchases. For simplicity, assume this interest is equal to the policy rate (in some extension we can model the financial sector who may charge some variable markup here). If the agent's wealth falls sufficiently low, they may be forced to liquidate some of their assets. Assume that if the agent's net worth falls below $\phi p^a_t$ they are forced to liquidate all of their assets and become a renter agent. The value function for the asset-holding agents is:
+Once an agent owns a non-zero amount of the asset their wealth with increase in subsequent periods due to amortization and any inflation that occurs in asset prices. However, they will also have to pay interest on their previous debt, and their assets will depreciate at rate $\delta$. For simplicity, assume this interest is equal to the policy rate (in some extension we can model the financial sector who may charge some variable markup here). Through this channel monetary policy has a direct effect on the households decision, at least that of the agents who are asset owners. Unlike agents with no assets, agents with assets are able to freely increase or decrease their asset holdings by any amount they can afford, but for simplicity assume that they do not borrow (leverage) in order to do so (but they can use their asset holdings as collatoral to avoid paying the fixed cost). If the agent's wealth falls sufficiently low, they may be forced to liquidate some of their assets. In particular, assume that agents face a cash-flow constraint: their wealth net of assets and consumption must be positive, otherwise they must liquidate their entire asset stock (and then they can buy back in at a lower level in the next period). To simplify notation define the net cash inflow of an asset-owning agent as $\chi^A_{it} = w_t l_{it} + m_{it} - p_t c_{it} - i_t d_{it}$. Further define their total wealth as $\omega^A_{it} = \left( 1 + \pi^a_t - \delta \right) a_{it} + m_{it} + w_t l_{it} - d_{it}$ With these assumptions the value function for an asset-owning agent is:
 
 \begin{align}
-  \underset{c_{it}, l_{it}, a_{it+1}}{max} V^{A}_{it}(a_{it}, m_{it}) = &u_{i}(c_{it}, l_{it}) + \beta [  \nonumber \\ 
-  \mathbb{I}\{ \left( 1 + r_t + \pi^a_t - i_t \right) p^a_t a_{it} + w_t l_{it} + m_{it} - p_t c_{it} \geq \phi p^a_t \} &V^A_{it+1}(\frac{\left( 1 + r_t + \pi^a_t - i_t \right) p^a_t a_{it} + w_t l_{it} + m_{it} - p_t c_{it}}{p^a_t}, 0) + \nonumber \\ 
-  \left(1 - \left( 1 + r_t + \pi^a_t - i_t \right) p^a_t a_{it} + w_t l_{it} + m_{it} - p_t c_{it} \right) &V^{NA}_{it+1}(0, \left( 1 + r_t + \pi^a_t - i_t \right) p^a_t a_{it} + w_t l_{it} + m_{it} - p_t c_{it})] \label{va}
+  \underset{c_{it}, l_{it}, a_{it+1}}{max} V^{A}_{it}(a_{it}, m_{it}, d_{it}) = &u_{i}(c_{it}, l_{it}) + \beta [  \nonumber \\ 
+  \mathbb{I}\{ \chi^A_{it} \geq 0 \} &V^A_{it+1}(\frac{a_{it+1}}{p^a_t}, \omega^A_{it} - \frac{a_{it+1}}{p^a_t} - p_t c_{it}, (1-i_t) d_{it}) + \nonumber \\ 
+  \left(1 - \mathbb{I}\{ \chi^A_{it} \geq 0 \} \right) &V^{NA}_{it+1}(0, \omega^A_{it}, 0)] \label{va}
 \end{align}
-
-Note that the asset-owning agent will, in 
 
 \section{Method} \label{method}
 
