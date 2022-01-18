@@ -1,0 +1,318 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{apa/global//global/global}
+    \entry{azinovic2019deep}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=508b44c5d764899d26a2ac3697ddb107}{%
+           family={Azinovic},
+           familyi={A\bibinitperiod},
+           given={Marlon},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=1a9c02a078a94d553fe03fd852424718}{%
+           family={Gaegauf},
+           familyi={G\bibinitperiod},
+           given={Luca},
+           giveni={L\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c23124144e7e96def354ba36f9b79e02}{%
+           family={Scheidegger},
+           familyi={S\bibinitperiod},
+           given={Simon},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{111eac74a9b254b4ffd43fb4ccda231d}
+      \strng{fullhash}{5ca3e67054cebbf116bba0947a98f43c}
+      \strng{bibnamehash}{5ca3e67054cebbf116bba0947a98f43c}
+      \strng{authorbibnamehash}{5ca3e67054cebbf116bba0947a98f43c}
+      \strng{authornamehash}{111eac74a9b254b4ffd43fb4ccda231d}
+      \strng{authorfullhash}{5ca3e67054cebbf116bba0947a98f43c}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Available at SSRN 3393482}
+      \field{title}{Deep equilibrium nets}
+      \field{year}{2019}
+    \endentry
+    \entry{bengio2003neural}{article}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=40a8e4774982146adc2688546f54efb2}{%
+           family={Bengio},
+           familyi={B\bibinitperiod},
+           given={Yoshua},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=dcb65deeb8d2de03d00f0aeeb3499771}{%
+           family={Ducharme},
+           familyi={D\bibinitperiod},
+           given={Réjean},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=da21e966c02c3cfd33d74369c7435c1a}{%
+           family={Vincent},
+           familyi={V\bibinitperiod},
+           given={Pascal},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=ea41c010e40f12e367cba6ef65adc671}{%
+           family={Janvin},
+           familyi={J\bibinitperiod},
+           given={Christian},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {JMLR. org}%
+      }
+      \strng{namehash}{058f6aa7282521dda725a309bd2d3fea}
+      \strng{fullhash}{cfa59cc774bd7b9cd8d3538e481d7b36}
+      \strng{bibnamehash}{cfa59cc774bd7b9cd8d3538e481d7b36}
+      \strng{authorbibnamehash}{cfa59cc774bd7b9cd8d3538e481d7b36}
+      \strng{authornamehash}{058f6aa7282521dda725a309bd2d3fea}
+      \strng{authorfullhash}{cfa59cc774bd7b9cd8d3538e481d7b36}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The journal of machine learning research}
+      \field{title}{A neural probabilistic language model}
+      \field{volume}{3}
+      \field{year}{2003}
+      \field{pages}{1137\bibrangedash 1155}
+      \range{pages}{19}
+    \endentry
+    \entry{den1996heterogeneity}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=dc81fa0e17fc0a04ad90a073c3b0242e}{%
+           family={Den\bibnamedelima Haan},
+           familyi={D\bibinitperiod\bibinitdelim H\bibinitperiod},
+           given={Wouter\bibnamedelima J},
+           giveni={W\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Taylor \& Francis}%
+      }
+      \strng{namehash}{dc81fa0e17fc0a04ad90a073c3b0242e}
+      \strng{fullhash}{dc81fa0e17fc0a04ad90a073c3b0242e}
+      \strng{bibnamehash}{dc81fa0e17fc0a04ad90a073c3b0242e}
+      \strng{authorbibnamehash}{dc81fa0e17fc0a04ad90a073c3b0242e}
+      \strng{authornamehash}{dc81fa0e17fc0a04ad90a073c3b0242e}
+      \strng{authorfullhash}{dc81fa0e17fc0a04ad90a073c3b0242e}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Business \& Economic Statistics}
+      \field{number}{4}
+      \field{title}{Heterogeneity, aggregate uncertainty, and the short-term interest rate}
+      \field{volume}{14}
+      \field{year}{1996}
+      \field{pages}{399\bibrangedash 411}
+      \range{pages}{13}
+    \endentry
+    \entry{dreyfus1962applied}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=4c39e0b59872614851647787d5d85590}{%
+           family={Dreyfus},
+           familyi={D\bibinitperiod},
+           given={Stuart\bibnamedelima E},
+           giveni={S\bibinitperiod\bibinitdelim E\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=7bb51e859e70aaedef4ed1f3bb67779b}{%
+           family={Bellman},
+           familyi={B\bibinitperiod},
+           given={Richard},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Princeton University Press}%
+      }
+      \strng{namehash}{6ef63159b21b36e10eb4ef3e84e7e114}
+      \strng{fullhash}{6ef63159b21b36e10eb4ef3e84e7e114}
+      \strng{bibnamehash}{6ef63159b21b36e10eb4ef3e84e7e114}
+      \strng{authorbibnamehash}{6ef63159b21b36e10eb4ef3e84e7e114}
+      \strng{authornamehash}{6ef63159b21b36e10eb4ef3e84e7e114}
+      \strng{authorfullhash}{6ef63159b21b36e10eb4ef3e84e7e114}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Applied dynamic programming}
+      \field{year}{1962}
+    \endentry
+    \entry{duarte2018machine}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=77af30e36500200b28c884a74cddc37d}{%
+           family={Duarte},
+           familyi={D\bibinitperiod},
+           given={Victor},
+           giveni={V\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{77af30e36500200b28c884a74cddc37d}
+      \strng{fullhash}{77af30e36500200b28c884a74cddc37d}
+      \strng{bibnamehash}{77af30e36500200b28c884a74cddc37d}
+      \strng{authorbibnamehash}{77af30e36500200b28c884a74cddc37d}
+      \strng{authornamehash}{77af30e36500200b28c884a74cddc37d}
+      \strng{authorfullhash}{77af30e36500200b28c884a74cddc37d}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Available at SSRN 3012602}
+      \field{title}{Machine learning for continuous-time economics}
+      \field{year}{2018}
+    \endentry
+    \entry{kingma2014adam}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=b6fbd171848aad4edf3925543f1f1522}{%
+           family={Kingma},
+           familyi={K\bibinitperiod},
+           given={Diederik\bibnamedelima P},
+           giveni={D\bibinitperiod\bibinitdelim P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8aa66e8231cc2fdbe67aa4f18ca970c6}{%
+           family={Ba},
+           familyi={B\bibinitperiod},
+           given={Jimmy},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{a09df9f123146b8e2c7f1134c9496932}
+      \strng{fullhash}{a09df9f123146b8e2c7f1134c9496932}
+      \strng{bibnamehash}{a09df9f123146b8e2c7f1134c9496932}
+      \strng{authorbibnamehash}{a09df9f123146b8e2c7f1134c9496932}
+      \strng{authornamehash}{a09df9f123146b8e2c7f1134c9496932}
+      \strng{authorfullhash}{a09df9f123146b8e2c7f1134c9496932}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:1412.6980}
+      \field{title}{Adam: A method for stochastic optimization}
+      \field{year}{2014}
+    \endentry
+    \entry{krusell2006quantitative}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=8b0641dea388438dc1762be628be0d0f}{%
+           family={Krusell},
+           familyi={K\bibinitperiod},
+           given={Per},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8b17ce4beaa9bf5d10274dbc2395b0e9}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Anthony\bibnamedelima A},
+           giveni={A\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge University Press}%
+      }
+      \strng{namehash}{7a53cd03be1aa6d5710b477bc9dcd43a}
+      \strng{fullhash}{7a53cd03be1aa6d5710b477bc9dcd43a}
+      \strng{bibnamehash}{7a53cd03be1aa6d5710b477bc9dcd43a}
+      \strng{authorbibnamehash}{7a53cd03be1aa6d5710b477bc9dcd43a}
+      \strng{authornamehash}{7a53cd03be1aa6d5710b477bc9dcd43a}
+      \strng{authorfullhash}{7a53cd03be1aa6d5710b477bc9dcd43a}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Econometric Society Monographs}
+      \field{title}{Quantitative macroeconomic models with heterogeneous agents}
+      \field{volume}{41}
+      \field{year}{2006}
+      \field{pages}{298}
+      \range{pages}{1}
+    \endentry
+    \entry{krusell1998income}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=8b0641dea388438dc1762be628be0d0f}{%
+           family={Krusell},
+           familyi={K\bibinitperiod},
+           given={Per},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+        {{un=1,uniquepart=suffix,hash=dbd3e5198ab47a60c6038937c54dbf14}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Anthony\bibnamedelima A},
+           giveni={A\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=1,
+           suffix={Jr},
+           suffixi={J\bibinitperiod},
+           suffixun=1}}%
+      }
+      \list{publisher}{1}{%
+        {The University of Chicago Press}%
+      }
+      \strng{namehash}{96b42cf1a6fefd197f5897b487c76d95}
+      \strng{fullhash}{96b42cf1a6fefd197f5897b487c76d95}
+      \strng{bibnamehash}{96b42cf1a6fefd197f5897b487c76d95}
+      \strng{authorbibnamehash}{96b42cf1a6fefd197f5897b487c76d95}
+      \strng{authornamehash}{96b42cf1a6fefd197f5897b487c76d95}
+      \strng{authorfullhash}{96b42cf1a6fefd197f5897b487c76d95}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of political Economy}
+      \field{number}{5}
+      \field{title}{Income and wealth heterogeneity in the macroeconomy}
+      \field{volume}{106}
+      \field{year}{1998}
+      \field{pages}{867\bibrangedash 896}
+      \range{pages}{30}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
