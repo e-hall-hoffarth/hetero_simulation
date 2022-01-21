@@ -38,5 +38,10 @@ def softplus(X, w, b):
 
 
 @jax.jit
+def exp(X, w, b):
+    return jnp.squeeze(jnp.exp(linear(X, w, b)))
+
+
+@jax.jit
 def softmax(X, w, b):
     return jnp.squeeze(jax.nn.softmax(linear(X, w, b)))
