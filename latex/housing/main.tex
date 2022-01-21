@@ -41,21 +41,47 @@ The main result of the model is a monetary transmission mechanism that acts on h
 
 \subsection{Households} \label{households}
 
+In order for monetary policy to have an effect on the rate of homeownership we will have to consider the lifecycle of agents. If the model were static with infinitely-lived agents then asset price inflation would result in inequality but not change which agents are actually homeowners. Therefore, we will consider an OLG type model and solve the lifetime utility problem of each generation. Assume that in each generation there are $N$ agents who live for a total of $T$ periods (somewhat unrealistic, but it will keep the simulation grid at a fixed size). Agents are born with no assets or debt, but do have some non-negative amount of cash that is drawn from $\Gamma (\alpha, \beta)$. They will not be able to purchase any assets until they accumulate cash worth $\phi p^a_t$ (i.e. enough for a downpayment on 1 unit of $a$). At this point they will have the choice of becoming asset owners, and will likely choose to do so since this asset generates an implicit return via amortization, and is a hedge against inflation (to which cash holdings are exposed). 
+
+However, households of all types will also demand cash. The renter households demand cash as it is their only means of saving. The asset-owning agents or potential asset-owning agents will demand cash because it is insurance against the \textit{cashflow constraint} that these agents face: $\chi_{it} = w_t l_{it} + m_{it} - p_t c_{it} - (\epsilon + i_t) d_{it} > 0$. The optimization solved by agent $i$ in the period they are born is:
+
+\begin{align}
+  \underset{\{c_{it}, m_{it+1}, a_{it+1}\}_{t=0}^T}{\max} &E_0\left[\sum^T_{t=0} \beta^t u(c_{it}) \right] \nonumber \\
+  \text{s.t. }&p_t c_{it} + m_{it+1} + (i_t + \epsilon) d_{it} + p^a_t (a_{it+1} - a_{it}) \leq m_{it} + w_t n_{it} \nonumber \\
+  &a_{it+1} = 0 \text{ if } \chi_{it} < 0 \text{ or } (a_{it} = 0 \text{ and } m_{it} + w_t n_{it} \leq \phi p^a_t) \nonumber \\
+  &d_{it+1} = (1 - \epsilon) d_{it} + (1 - \phi) p^a_t (a_{it+1} - a_{it}) \nonumber \\
+  &d_{i0} = a_{i0} = 0, m_{i0} \sim \Gamma(\alpha, \beta), d_{iT} = 0
+\end{align}
+
 The model contains a discrete mass (for sake of simulation) of $n$ agents, who in each period may be either an asset-owning or renter agent. Since the same agent can switch between these states dynamically, we will consider a value function approach to specifying this model. Consider first the case of the renter agent. They can only store their wealth in cash that pays no interest, until they can amass enough wealth to surpass the asset fixed cost. In this case the agent is able to pay $\phi p^a_t$ or more to buy one unit of the asset, while the rest is borrowed as debt that is amortized linearly over subsequent periods. In order to simplify notation let the wealth in each period $t$ a renter agent indexed $i$ be $\omega^{NA}_{it} = w_t l_{it} + m_{it} - d_{it}$ (even though $l_{it}$ is a choice variable). Given these definitions, a renter agent's value function is:
 
 \begin{align}
   \underset{c_{it}, l_{it}, a_{it+1}}{max} V^{NA}_{it}(0, m_{it}, d_{it}) = &u_{i}(c_{it}, l_{it}) + \beta [ \nonumber \\ 
-  \mathbb{I}\{\omega^{NA}_{it} - p_t c_{it} \geq \phi p_t^a \} &E_t[V^A_{it+1}(\frac{a_{it+1}}{p^a_t}, \omega^{NA}_{it} - p_t c_{it} - p^a_t a_{it+1}, (1 - i_t) d_{it} + p^a_t a_{it+1})] + \nonumber \\ 
-  \left(1 - \mathbb{I}\{\omega^{NA}_{it} - p_t c_{it} \geq \phi p_t^a \} \right) &E_t[V^{NA}_{it+1}(0, \omega^{NA}_{it} - p_t c_{it}, (1 - i_t) d_{it})]]\label{vna}
+  \mathbb{I}\{\omega^{NA}_{it} - p_t c_{it} \geq \phi p_t^a \} &E_t[V^A_{it+1}(a_{it+1}, \omega^{NA}_{it} - p_t c_{it} - p^a_t a_{it+1} - (i_t + \epsilon) d_{it}, (1 - \epsilon) d_{it} + p^a_t a_{it+1})] + \nonumber \\ 
+  \left(1 - \mathbb{I}\{\omega^{NA}_{it} - p_t c_{it} \geq \phi p_t^a \} \right) &E_t[V^{NA}_{it+1}(0, \omega^{NA}_{it} - p_t c_{it} - i_t d_{it}, (1 - \epsilon) d_{it})]]\label{vna}
 \end{align}
 
 Once an agent owns a non-zero amount of the asset their wealth with increase in subsequent periods due to amortization and any inflation that occurs in asset prices. However, they will also have to pay interest on their previous debt. For simplicity, assume this interest is equal to the policy rate (in some extension we can model the financial sector who may charge some variable markup here). Through this channel monetary policy has a direct effect on the households decision, at least that of the agents who are asset owners. Unlike agents with no assets, agents with assets are able to freely increase or decrease their asset holdings by any amount they can afford, but for simplicity assume that they do not borrow (leverage) in order to do so (but they can use their asset holdings as collatoral to avoid paying the fixed cost). If the agent's wealth falls sufficiently low, they may be forced to liquidate some of their assets. In particular, assume that agents face a cash-flow constraint: their wealth net of assets and consumption must be positive, otherwise they must liquidate their entire asset stock (and then they can buy back in at a lower level in the next period). To simplify notation define the net cash inflow of an asset-owning agent as $\chi^A_{it} = w_t l_{it} + m_{it} - p_t c_{it} - i_t d_{it}$. Further define their total wealth as $\omega^A_{it} = p^a_t a_{it} + w_t l_{it} + m_{it} - d_{it}$ With these assumptions the value function for an asset-owning agent is:
 
 \begin{align}
   \underset{c_{it}, l_{it}, a_{it+1}}{max} V^{A}_{it}(a_{it}, m_{it}, d_{it}) = &u_{i}(c_{it}, l_{it}) + \beta [  \nonumber \\ 
-  \mathbb{I}\{ \chi^A_{it} \geq 0 \} &E_t[V^A_{it+1}(\frac{a_{it+1}}{p^a_t}, \omega^A_{it} - p^a_t (a_{it+1} - a_{it}) - p_t c_{it}, (1-i_t) d_{it})] + \nonumber \\ 
+  \mathbb{I}\{ \chi^A_{it} \geq 0 \} &E_t[V^A_{it+1}(a_{it+1}, \omega^A_{it} - p^a_t (a_{it+1} - a_{it}) - p_t c_{it} - (i_t +\epsilon) d_{it}, (1 - \epsilon) d_{it})] + \nonumber \\ 
   \left(1 - \mathbb{I}\{ \chi^A_{it} \geq 0 \} \right) &E_t[V^{NA}_{it+1}(0, \max \{ 0, \omega^a_{it} - d_{it} \}, \max \{ 0, d_{it} - \omega^a_{it} \})]] \label{va}
 \end{align}
+
+\subsection{Firms}
+
+\subsection{Monetary Authority}
+
+The monetary authortity is assumed to set the nominal interest rate according to a simple Taylor rule: $i_t = \phi_\pi \pi_t + u_t$. However, unlike in a standard NK setting, we will explictly model the market for money that gives rise to this interest rate. This is because asset prices are tied directly to the amount of cash circulating. In this economy households will have a demand for money either to save (if they are renters), or to insure against future risk from the cash flow constraint (if they are homeowners). Since both types of agents have less residual wealth when the nominal rate is higher (due to debt repayments) the aggregate money demand is downward sloping in nominal rate. Assume that the money supply is then fixed at the amount which equates supply and demand at the targetted nominal rate. Although it is not possible to analytically solve for this amount in this setup, it will nonetheless be possible to estimate the money demand, and hence the functional relationship between the nominal rate and money supply via a neural network.
+
+\subsection{Assets}
+
+For simplicity I will assume that the supply of assets in the economy is fixed. This is probably a good approximation of the housing market in the short run,however, I am also interested in long run dynamics, and monetary policy may have an important impact on construction investment. Therefore, the extension to a more intricate housing supply sector should be considered. Furthermore, assume that asset prices are flexible. As a result  
+
+\subsection{Equilibrium}
+
+In this economy an equilibrium is a set of prices {$p^a_t$, $p_t$, $w_t$}
 
 \section{Method} \label{method}
 
