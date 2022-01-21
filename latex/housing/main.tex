@@ -1,0 +1,70 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\graphicspath{{./images/}}
+
+\usepackage[
+  backend=biber,
+  style=apa,
+  citestyle=apa
+]{biblatex}
+\addbibresource{references.bib}
+
+\title{Housing Price Transmission Mechanism for Monetary Policy: An Application of Deep Learning for Macroeconomic Modelling}
+\author{Emmet Hall-Hoffarth}
+\date{\today}
+
+\begin{document}
+\maketitle
+    
+\begin{abstract}
+
+Placeholder
+
+\end{abstract}
+
+
+\section{Introduction}
+
+There is a growing literature including the work of \citeauthor{duarte2018machine} (\citeyear{duarte2018machine}), \citeauthor{azinovic2019deep} (\citeyear{azinovic2019deep}), and \citeauthor{maliar2021deep} (\citeyear{maliar2021deep}) that considers how neural networks can be used to approximate the solution to macroeconomic models. These papers suggest that this methodology can be used to solve highly complex economic models which might have previously been considered computationally intractable. In particular, \citeauthor{han2021deepham} (\citeyear{han2021deepham}) suggest that the neural network methodology is particularly useful in contexts which are both \textit{high-dimensional} and \textit{non-linear}. This is because while neural networks perform admirably in this type of environment (citation here), existing techniques used in economics fall short here. Projection can be used in high-dimensional settings, but by definition fails to handle non-linearities (citation here). Conversely, perturbation can handle non-linearities, but quickly becomes intractable as the dimension of the state space grows (citation here). This paper will consider one policy relevant application that possesses both of the aforementioned properties, such that the neural network methodology will be required in order to adequately estimate a solution.
+
+The model consists of heterogenous households who can invest in an asset (housing), but only if they possess a requisite level of wealth to pay a fixed cost (down-payment). This asset has the benefit of being safe from inflation, but is associated with a cost that varies with the policy rate (mortgage payments). If agents are unable to afford the fixed cost they will have to store their wealth in (cash or risk-free bond). Since the agents face a cut-off, the model contains a distinct non-linearity, and to some extent as a result of this the model is not subject to Krusell-Smith aggregation \parencite{krusell1998income}. Therefore, the heterogeneity between agents is non-trivial, and the solution lies in a high-dimensional space, so in order to solve the model a neural network will be employed. 
+
+The main result of the model is a monetary transmission mechanism that acts on housing prices and inequality, which is particularly relevant to policy in the post-financial crisis era. The increase in inflationary pressure resulting from loose monetary policy statically increases inequality, but more importantly, it has the dynamic effect of causing fewer agents to be able to pay the fixed cost to own the housing asset. Since monetary policy has a direct impact on the behaviour of only the asset-bearing agents this results in a dampening of the effect of future monetary policy action.
+
+\section{Literature Review} \label{lit_review}
+
+\section{Model} \label{model}
+
+\subsection{Households} \label{households}
+
+The model contains a discrete mass (for sake of simulation) of $n$ agents, who in each period may be either an asset-owning or renter agent. Since the same agent can switch between these states dynamically, we will consider a value function approach to specifying this model. Consider first the case of the renter agent. They can only store their wealth in cash that pays no interest, until they can amass enough wealth to surpass the asset fixed cost. In this case the agent is able to pay $\phi p^a_t$ or more to buy one unit of the asset, while the rest is borrowed as debt that is amortized linearly over subsequent periods. In order to simplify notation let the wealth in each period $t$ a renter agent indexed $i$ be $\omega^{NA}_{it} = w_t l_{it} + m_{it} - d_{it}$ (even though $l_{it}$ is a choice variable). Given these definitions, a renter agent's value function is:
+
+\begin{align}
+  \underset{c_{it}, l_{it}, a_{it+1}}{max} V^{NA}_{it}(0, m_{it}, d_{it}) = &u_{i}(c_{it}, l_{it}) + \beta [ \nonumber \\ 
+  \mathbb{I}\{\omega^{NA}_{it} - p_t c_{it} \geq \phi p_t^a \} &E_t[V^A_{it+1}(\frac{a_{it+1}}{p^a_t}, \omega^{NA}_{it} - p_t c_{it} - p^a_t a_{it+1}, (1 - i_t) d_{it} + p^a_t a_{it+1})] + \nonumber \\ 
+  \left(1 - \mathbb{I}\{\omega^{NA}_{it} - p_t c_{it} \geq \phi p_t^a \} \right) &E_t[V^{NA}_{it+1}(0, \omega^{NA}_{it} - p_t c_{it}, (1 - i_t) d_{it})]]\label{vna}
+\end{align}
+
+Once an agent owns a non-zero amount of the asset their wealth with increase in subsequent periods due to amortization and any inflation that occurs in asset prices. However, they will also have to pay interest on their previous debt. For simplicity, assume this interest is equal to the policy rate (in some extension we can model the financial sector who may charge some variable markup here). Through this channel monetary policy has a direct effect on the households decision, at least that of the agents who are asset owners. Unlike agents with no assets, agents with assets are able to freely increase or decrease their asset holdings by any amount they can afford, but for simplicity assume that they do not borrow (leverage) in order to do so (but they can use their asset holdings as collatoral to avoid paying the fixed cost). If the agent's wealth falls sufficiently low, they may be forced to liquidate some of their assets. In particular, assume that agents face a cash-flow constraint: their wealth net of assets and consumption must be positive, otherwise they must liquidate their entire asset stock (and then they can buy back in at a lower level in the next period). To simplify notation define the net cash inflow of an asset-owning agent as $\chi^A_{it} = w_t l_{it} + m_{it} - p_t c_{it} - i_t d_{it}$. Further define their total wealth as $\omega^A_{it} = p^a_t a_{it} + w_t l_{it} + m_{it} - d_{it}$ With these assumptions the value function for an asset-owning agent is:
+
+\begin{align}
+  \underset{c_{it}, l_{it}, a_{it+1}}{max} V^{A}_{it}(a_{it}, m_{it}, d_{it}) = &u_{i}(c_{it}, l_{it}) + \beta [  \nonumber \\ 
+  \mathbb{I}\{ \chi^A_{it} \geq 0 \} &E_t[V^A_{it+1}(\frac{a_{it+1}}{p^a_t}, \omega^A_{it} - p^a_t (a_{it+1} - a_{it}) - p_t c_{it}, (1-i_t) d_{it})] + \nonumber \\ 
+  \left(1 - \mathbb{I}\{ \chi^A_{it} \geq 0 \} \right) &E_t[V^{NA}_{it+1}(0, \max \{ 0, \omega^a_{it} - d_{it} \}, \max \{ 0, d_{it} - \omega^a_{it} \})]] \label{va}
+\end{align}
+
+\section{Method} \label{method}
+
+\section{Results} \label{results}
+
+\section{Conclusion} \label{conclusion}
+
+
+\newpage
+\printbibliography
+
+\end{document}

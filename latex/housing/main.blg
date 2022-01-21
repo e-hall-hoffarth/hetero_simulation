@@ -1,0 +1,9 @@
+[0] Config.pm:311> INFO - This is Biber 2.16
+[1] Config.pm:314> INFO - Logfile is 'main.blg'
+[86] biber:340> INFO - === Fri Jan 21, 2022, 16:10:06
+[108] Biber.pm:415> INFO - Reading 'main.bcf'
+[217] Biber.pm:952> INFO - Found 5 citekeys in bib section 0
+[234] Biber.pm:4340> INFO - Processing section 0
+[246] Biber.pm:4531> INFO - Looking for bibtex format file 'references.bib' for section 0
+[339] Utils.pm:411> ERROR - Cannot find 'references.bib'!
+[339] Biber.pm:132> INFO - ERRORS: 1
