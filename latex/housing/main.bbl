@@ -1,0 +1,247 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{apa/global//global/global}
+    \entry{azinovic2019deep}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=508b44c5d764899d26a2ac3697ddb107}{%
+           family={Azinovic},
+           familyi={A\bibinitperiod},
+           given={Marlon},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=1a9c02a078a94d553fe03fd852424718}{%
+           family={Gaegauf},
+           familyi={G\bibinitperiod},
+           given={Luca},
+           giveni={L\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c23124144e7e96def354ba36f9b79e02}{%
+           family={Scheidegger},
+           familyi={S\bibinitperiod},
+           given={Simon},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{111eac74a9b254b4ffd43fb4ccda231d}
+      \strng{fullhash}{5ca3e67054cebbf116bba0947a98f43c}
+      \strng{bibnamehash}{5ca3e67054cebbf116bba0947a98f43c}
+      \strng{authorbibnamehash}{5ca3e67054cebbf116bba0947a98f43c}
+      \strng{authornamehash}{111eac74a9b254b4ffd43fb4ccda231d}
+      \strng{authorfullhash}{5ca3e67054cebbf116bba0947a98f43c}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Available at SSRN 3393482}
+      \field{title}{Deep equilibrium nets}
+      \field{year}{2019}
+    \endentry
+    \entry{dias2019monetary}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=af280480908e4182d12a6f0f1314e3d8}{%
+           family={Dias},
+           familyi={D\bibinitperiod},
+           given={Daniel\bibnamedelima A},
+           giveni={D\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+        {{un=1,uniquepart=given,hash=9ef54139dd5a908ed8bd3c3673da13fa}{%
+           family={Duarte},
+           familyi={D\bibinitperiod},
+           given={João\bibnamedelima B},
+           giveni={J\bibinitperiod\bibinitdelim B\bibinitperiod},
+           givenun=1}}%
+      }
+      \list{publisher}{1}{%
+        {Wiley Online Library}%
+      }
+      \strng{namehash}{564e5781160ef904ff251b61076ee466}
+      \strng{fullhash}{564e5781160ef904ff251b61076ee466}
+      \strng{bibnamehash}{564e5781160ef904ff251b61076ee466}
+      \strng{authorbibnamehash}{564e5781160ef904ff251b61076ee466}
+      \strng{authornamehash}{564e5781160ef904ff251b61076ee466}
+      \strng{authorfullhash}{564e5781160ef904ff251b61076ee466}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Applied Econometrics}
+      \field{number}{5}
+      \field{title}{Monetary policy, housing rents, and inflation dynamics}
+      \field{volume}{34}
+      \field{year}{2019}
+      \field{pages}{673\bibrangedash 687}
+      \range{pages}{15}
+    \endentry
+    \entry{duarte2018machine}{article}{}
+      \name{author}{1}{}{%
+        {{un=1,uniquepart=given,hash=77af30e36500200b28c884a74cddc37d}{%
+           family={Duarte},
+           familyi={D\bibinitperiod},
+           given={Victor},
+           giveni={V\bibinitperiod},
+           givenun=1}}%
+      }
+      \strng{namehash}{77af30e36500200b28c884a74cddc37d}
+      \strng{fullhash}{77af30e36500200b28c884a74cddc37d}
+      \strng{bibnamehash}{77af30e36500200b28c884a74cddc37d}
+      \strng{authorbibnamehash}{77af30e36500200b28c884a74cddc37d}
+      \strng{authornamehash}{77af30e36500200b28c884a74cddc37d}
+      \strng{authorfullhash}{77af30e36500200b28c884a74cddc37d}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Available at SSRN 3012602}
+      \field{title}{Machine learning for continuous-time economics}
+      \field{year}{2018}
+    \endentry
+    \entry{han2021deepham}{article}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=dcbed821c92a82aa9d46cf353c58ec62}{%
+           family={Han},
+           familyi={H\bibinitperiod},
+           given={Jiequn},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c5bade26cb26133860822ad8997eee1c}{%
+           family={Yang},
+           familyi={Y\bibinitperiod},
+           given={Yucheng},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{66cf083ae73ff0357f5bb9310f4e2121}
+      \strng{fullhash}{66cf083ae73ff0357f5bb9310f4e2121}
+      \strng{bibnamehash}{66cf083ae73ff0357f5bb9310f4e2121}
+      \strng{authorbibnamehash}{66cf083ae73ff0357f5bb9310f4e2121}
+      \strng{authornamehash}{66cf083ae73ff0357f5bb9310f4e2121}
+      \strng{authorfullhash}{66cf083ae73ff0357f5bb9310f4e2121}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{DeepHAM: A Global Solution Method for Heterogeneous Agent Models with Aggregate Shocks}
+      \field{year}{2021}
+    \endentry
+    \entry{krusell1998income}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=8b0641dea388438dc1762be628be0d0f}{%
+           family={Krusell},
+           familyi={K\bibinitperiod},
+           given={Per},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=dbd3e5198ab47a60c6038937c54dbf14}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Anthony\bibnamedelima A},
+           giveni={A\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0,
+           suffix={Jr},
+           suffixi={J\bibinitperiod},
+           suffixun=0}}%
+      }
+      \list{publisher}{1}{%
+        {The University of Chicago Press}%
+      }
+      \strng{namehash}{96b42cf1a6fefd197f5897b487c76d95}
+      \strng{fullhash}{96b42cf1a6fefd197f5897b487c76d95}
+      \strng{bibnamehash}{96b42cf1a6fefd197f5897b487c76d95}
+      \strng{authorbibnamehash}{96b42cf1a6fefd197f5897b487c76d95}
+      \strng{authornamehash}{96b42cf1a6fefd197f5897b487c76d95}
+      \strng{authorfullhash}{96b42cf1a6fefd197f5897b487c76d95}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of political Economy}
+      \field{number}{5}
+      \field{title}{Income and wealth heterogeneity in the macroeconomy}
+      \field{volume}{106}
+      \field{year}{1998}
+      \field{pages}{867\bibrangedash 896}
+      \range{pages}{30}
+    \endentry
+    \entry{maliar2021deep}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=cb03f998d692ba833a2fb6f760942eaa}{%
+           family={Maliar},
+           familyi={M\bibinitperiod},
+           given={Lilia},
+           giveni={L\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=0843ece0b0fc989013d10a8611a2d10a}{%
+           family={Maliar},
+           familyi={M\bibinitperiod},
+           given={Serguei},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=bfec7cab53c92cced9b2f0133a5c2866}{%
+           family={Winant},
+           familyi={W\bibinitperiod},
+           given={Pablo},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{44de1e012ed2e2d3c07f19845839d0cf}
+      \strng{fullhash}{3ec778922abda81fe67285d91d8325ed}
+      \strng{bibnamehash}{3ec778922abda81fe67285d91d8325ed}
+      \strng{authorbibnamehash}{3ec778922abda81fe67285d91d8325ed}
+      \strng{authornamehash}{44de1e012ed2e2d3c07f19845839d0cf}
+      \strng{authorfullhash}{3ec778922abda81fe67285d91d8325ed}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Monetary Economics}
+      \field{title}{Deep learning for solving dynamic economic models.}
+      \field{volume}{122}
+      \field{year}{2021}
+      \field{pages}{76\bibrangedash 101}
+      \range{pages}{26}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

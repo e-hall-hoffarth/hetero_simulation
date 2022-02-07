@@ -1,0 +1,110 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\graphicspath{{./images/}}
+
+\usepackage[
+  backend=biber,
+  style=apa,
+  citestyle=apa
+]{biblatex}
+\addbibresource{references.bib}
+
+\title{Simple model of housing price transmission mechanism for monetary policy}
+\author{Emmet Hall-Hoffarth}
+\date{\today}
+
+\begin{document}
+\maketitle
+    
+\section{Setup}
+
+Assume an endowment economy in which a unit mass of overlapping generations of agents live for two periods $t$ and $t+1$ and possess initial wealth uniformly distributed over the unit interval: $\omega_{it} \sim U(0,1)$. There are two types of agents: homeowners and renters. I will assume that renter agents can only save in cash, and are therefore subject to uninsurable inflation risk. Homeowner agents on the other hand can invest in housing (on which they must pay interest, but may benefit from the appreciation of) or in an interest-bearing bond. Thus, the homeowner agents are strictly better off than the renter agents. Both types of agents derive utility from and therefore have demand for consumption goods and housing. For simplicity, I will completely trivialize the supply side of the economy (but this will have to be relaxed later for full exposition of the mechanism): in both periods the aggregate supply of consumption goods and housing is $1$. Homeowner agents will be able to satisfy their demand for housing by purchasing a housing asset at price $p^a_t$ that they can then sell in period $t+1$. Renters on the other hand will have to rent their housing at price $r^a_t$. In period $t+1$ both agents will rent at price $r^a_{t+1}$ to fulfil their housing demand.
+
+The key assumption of this model is that the type of agents is determined endogenously in equilibrium. Agents will become renters if their wealth is below $\phi p^a_t$ for some constant $0 < \phi < 1$. Given the distributional assumption about wealth, this is also equal to the mass of agents who are renters. The rest of the agents ($1 - \phi p^a_t$) are homeowners. The real life phenomenon that this is meant to represent is a minimum down-payment that must be made to obtain a mortgage. The aim of the model is to show that if monetary policy today prices some agents out of the housing market, it may have implications for monetary policy in the future, since renter agents are less sensitive to monetary policy decisions.
+
+Consider first the optimization problem of renter agents, which is fairly trivial. Assume that both types of agents have utility of the form $U(c, a) = ln(c) + ln(a)$, and normalize the price of consumption good in period $t$ ($p_t$) to $1$. The renter agents solve:
+
+\begin{align}
+    \underset{c^r_t, c^r_{t+1}, a^r_{t}, a^r_{t+1}, \omega_{t+1}}{\max} &ln(c^r_t) + ln(a^r_t) + \beta[ln(c^r_{t+1}) + ln(a^r_{t+1})] \nonumber \\
+    \text{s.t. }& \omega_t = c^r_t + r_t^a a^r_t + \omega_{t+1} \nonumber \\
+    & \omega_{t+1} = \mathbb{E}_t(p_{t+1})c^r_{t+1} + \mathbb{E}_t(r^a_{t+1})a^r_{t+1}
+\end{align}
+
+The resulting optimality conditions combined with the wealth of renter agents results in the following equilibrium conditions:
+
+\begin{align}
+    c^r_t = r^a_t a^r_t =& \frac{\phi p^a_t}{2(1+\beta)} \\
+    \mathbb{E}_t(p_{t+1}) c^r_{t+1} = \mathbb{E}_t(r^a_{t+1}) a^r_{t+1} =& \frac{\beta \phi p^a_t}{2(1+\beta)}
+\end{align}
+
+When log-linearized these yield:
+
+\begin{align}
+    \hat{c}^r_{t+1} =& (1-\mathbb{E}_t(\pi_{t+1}))\hat{c}^r_t \\
+    \hat{a}^r_{t+1} =& (1-\mathbb{E}_t(\pi^r_{t+1}))\hat{a}^r_t \\
+    \hat{c}^r_t =& \hat{r}^a_t + \hat{a}^r_t
+\end{align}
+
+Given the unit supply of consumption goods and housing the resource constraint then implies the following regarding the consumption of homeowner agents:
+
+\begin{align}
+    c^o_t =& 1 - \frac{\phi p^a_t}{2(1+\beta)} = \frac{2(1+\beta) - \phi p^a_t}{2(1+\beta)} \\
+    a^o_t =& 1 - \frac{\phi p^a_t}{2(1+\beta)r^a_t} = \frac{2(1+\beta)r^a_t - \phi p^a_t}{2(1+\beta)r^a_t} \\
+    c^o_{t+1}  =& 1 - \frac{\beta \phi p^a_t}{2(1+\beta)\mathbb{E}_t(p_{t+1})} = \frac{2(1+\beta)\mathbb{E}_t(p_{t+1}) - \beta \phi p^a_t}{2(1+\beta)\mathbb{E}_t(p_{t+1})} \\
+    a^o_{t+1}  =& 1 - \frac{\beta \phi p^a_t}{2(1+\beta)\mathbb{E}_t(r^a_{t+1})} = \frac{2(1+\beta)\mathbb{E}_t(r^a_{t+1}) - \beta \phi p^a_t}{2(1+\beta)\mathbb{E}_t(r^a_{t+1})} \\
+\end{align}
+
+Now consider the optimization problem of homeowner agents. They solve:
+
+\begin{align}
+    \underset{c^o_t, c^o_{t+1}, a^o_{t}, a^o_{t+1}, b_t=0}{\max} &ln(c^o_t) + ln(a^o_t) + \beta[ln(c^o_{t+1}) + ln(a^o_{t+1})] \nonumber \\
+    \text{s.t. }& \omega_t = c^o_t + p^a_t (1 - i_t) a^o_t + b_t \nonumber \\
+    & (1 + i_t) b_t + \mathbb{E}_t (p^a_{t+1}) a^o_t = \mathbb{E}_t(p_{t+1})c^o_{t+1} + \mathbb{E}_t(r^a_{t+1})a^o_{t+1}
+\end{align}
+
+Note that it is assumed that bond holdings are zero in equilibrium. The threat of bond owning is sufficient to impose a no-arbitrage condition. This problem implies the following optimality conditions:
+
+\begin{align}
+    c^o_{t+1} =& \beta \frac{1 + i_t}{\mathbb{E}_t (p_{t+1})} c^o_t \\
+    \mathbb{E}_t(r^a_{t+1}) a^o_{t+1} =& \beta \left( (1+i_t)^2 - \mathbb{E}_t (\Pi^a_{t+1}) \right) p^a_t a^o_t \\
+    (1 + i_t) c^o_t =& \left( (1+i_t)^2 - \mathbb{E}_t (\Pi^a_{t+1}) \right) p^a_t a^o_t
+\end{align}
+
+When log-linearized these yield:
+
+\begin{align}
+    \hat{c}^o_{t+1} =& (1 + \hat{i}_t - \mathbb{E}_t(\pi_t))\hat{c}^o_t \\
+    \mathbb{E}_t(\hat{r}^a_{t+1}) + \hat{a}^o_{t+1} =& \frac{(1+\bar{i})\bar{i}}{(1+\bar{i})^2 - \mathbb{E}_t(\bar{\Pi}^a_{t+1})}\hat{i}_t - \frac{\mathbb{E}_t(\bar{\Pi}^a_{t+1})}{(1+\bar{i})^2 - \mathbb{E}_t(\bar{\Pi}^a_{t+1})} \mathbb{E}_t(\pi^a_{t+1}) + \hat{p}^a_t + \hat{a}^o_t \\
+    \hat{c}^o_t =& \frac{1+\bar{i}_t - \frac{\mathbb{E}_t(\bar{\Pi}^a_{t+1})}{1+\bar{i}_t}}{(1+\bar{i}_t)^2 - \mathbb{E}_t(\bar{\Pi}^a_{t+1})}\hat{i}_t - \frac{\mathbb{E}_t(\bar{\Pi}^a_{t+1})}{(1+\bar{i}_t)^2 - \mathbb{E}_t(\bar{\Pi}^a_{t+1})}\mathbb{E}_t(\pi^a_{t+1}) + \hat{p}^a_t + \hat{a}^o_t
+\end{align}
+
+In order to fully understand the aggregate dynamics we need to pin down the steady-state asset price. To do this, we will employ the optimality conditions along with the aggregate resource constraints. Given that in any given period there is a young generation and an old generation, each of which contains both types of agents, the aggregate resource constraints read:
+
+\begin{align}
+    c^r_{t|t} + c^o_{t|t} + c^r_{t|t-1} + c^o_{t|t-1} = y_t = 1 \\
+    a^r_{t|t} + a^o_{t|t} + a^r_{t|t-1} + a^o_{t|t-1} = a_t = 1 \\
+\end{align}
+
+In steady state all prices are constant so in particular it follows that $\mathbb{E}_t(\Pi_{t+1}) = \mathbb{E}_t(p_{t+1}) = \mathbb{E}_t(\Pi^a_{t+1}) = 1$ and $\mathbb{E}_t{r^a_{t+1}} = r^a_t$. After comibining this steady state assumption with the aggregate resource constraint and optimality conditions, further simplifications yield:
+
+\begin{equation}
+    \bar{p}^a = \frac{\beta (1+\bar{i})}{\phi + \beta(1 + \bar{i}) - \phi(1+\beta)}
+\end{equation}
+
+Which indeed implies that $\bar{p}^a_t$ is a decreasing function of $\bar{i}$. Therefore, as the steady state policy rate decreases so too does the proportion of agents who are homeowners.
+
+We can then combine the log-linear optimality conditions for both types of agents in order to elucidate the aggregate dynamics of output in the model. Doing so we obtain:
+
+\begin{align}
+    \hat{c}_t =& \frac{\bar{c}^o}{\bar{c}} \left( \hat{c}^o_{t|t} + \hat{c}^o_{t|t-1} \right) + \frac{\bar{c}^r}{\bar{c}} \left(\hat{c}^r_{t|t} + \hat{c}^r_{t|t-1} \right) \\
+    =& \left( \frac{2(1+\beta) - \phi \bar{p}^a}{2(1+\beta)} \right) \left( 1 + (1 + \hat{i}_t - \mathbb{E}_t(\pi_{t+1})) \right) \hat{c}^o_t + \frac{\phi \bar{p}^a_t}{2(1+\beta)}\left( 1 + (1 - \mathbb{E}_t (\pi_{t+1})) \right) \hat{c}^r_t
+\end{align}
+
+This is the IS equation for this economy, and it illustrates the primary mechanism of this model. The consumption decision of agents who are renters is not directly affected by changes to the nominal rate, only through general equilibrium. On the other hand, homeowner agents have a standard New Keynesian IS curve, and will substitute intertemporally accordingly. We have already seen that the steady state nominal rate is inversely related to the steady state asset price, and therefore to the proportion of agents who are homeowners. Therefore, when the steady state level of the policy rate is lower,  the impulse response to an otherwise equivalent monetary policy shock will be relatively weaker.
+
+
+\end{document}
