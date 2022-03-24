@@ -4,7 +4,7 @@ from jax.scipy import optimize
 
 
 def log_utility():
-    return jax.jit(lambda c: jnp.sum(jnp.log(c)))
+    return jax.jit(lambda c: jnp.log(c))
 
 
 def disc_log_utility(B):
@@ -13,7 +13,7 @@ def disc_log_utility(B):
 
 
 def ces_utility(sigma):
-    return jax.jit(lambda c: jnp.power(jnp.sum(jnp.power(c, ((sigma - 1)/sigma))), (sigma/(sigma - 1))))
+    return jax.jit(lambda c: jnp.power(jnp.power(c, ((sigma - 1)/sigma)), (sigma/(sigma - 1))))
 
 
 def disc_ces_utility(B, sigma):
