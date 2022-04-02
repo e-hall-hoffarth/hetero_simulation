@@ -3,7 +3,8 @@ import pandas as pd
 import pickle
 import jax
 import jax.numpy as jnp
-from jax.example_libraries.optimizers import adam, unpack_optimizer_state, pack_optimizer_state
+from jax.example_libraries.optimizers import adamax as optimizer
+from jax.example_libraries.optimizers import unpack_optimizer_state, pack_optimizer_state
 from hetero_simulation.archive.agent import log_utility
 from hetero_simulation.ml.utils import *
 # jax.config.update('jax_platform_name', 'cpu')
@@ -23,7 +24,7 @@ ml_config = {
     'n_epoch': 10 ** 5,
     'save_interval': 10 ** 2,
     'report_interval': 10,
-    'step_size': 1e-2,
+    'step_size': 1e-5,
     'nn_shapes': jnp.array([16, 16, 16, 16]),
     'init_seed': 1234, # np.random.randint(1, 10000000)
     'init_scale': 1e-1,
@@ -33,8 +34,8 @@ ml_config = {
 
 @jax.jit
 def neural_network(params, m0, t0):
-    live_next = jnp.int32(t0 < econ_config['T'])
-    alive = jnp.int32(t0 < econ_config['T'] + 1)
+    live_next = t0 < econ_config['T']
+    alive = t0 < econ_config['T'] + 1
     cparams = params['cparams']
     vparams = params['vparams']
     lparams = params['lparams']
@@ -52,36 +53,40 @@ def neural_network(params, m0, t0):
     # c0, m1 = live_next * m0 * softmax(clf, cparams['wf'], cparams['bf']) + (1 - live_next) * jnp.array([m0 - 1e-10, 1e-10])
     # l0 = live_next * 1 / c0
     # c0, m1 = m0 * softmax(clf, cparams['wf'], cparams['bf'])
-    c0 = m0 * scaled_sigmoid(clf, cparams['wf'], cparams['bf'])
+    # c0 = m0 * scaled_sigmoid(clf, cparams['wf'], cparams['bf'])
+    c0 = jnp.squeeze(jax.lax.select(live_next, m0 * scaled_sigmoid(clf, cparams['wf'], cparams['bf']), m0))
     # c0 = jnp.maximum(c0, 1e-10) # We can't let c0 be equal to zero or the multiplier is inf
     m1 = m0 - c0
-    l0 = exp(clf, lparams['wf'], lparams['bf'])
+    l0 = 0 # 1 / c0 # exp(clf, lparams['wf'], lparams['bf']) * alive
 
-    v0 = custom_value_fn(vlf, vparams['wf'], vparams['bf']) * alive
+    v0 = jax.lax.select(alive, jax.lax.select(live_next, custom_value_fn(vlf, vparams['wf'], vparams['bf']), jnp.log(c0)), 0.)
+    # v0 = jnp.int32(alive) * v0
     bc = m0 - (c0 + m1)
-    return (v0, c0, m1, bc, l0)
+    return (jnp.squeeze(v0), jnp.squeeze(c0), jnp.squeeze(m1), jnp.squeeze(bc), jnp.squeeze(l0))
 
 
 @jax.jit
 def loss(params, m0, t0, key):
+    live_next = t0 < econ_config['T']
     v0, c0, m1, bc0, l0 = neural_network(params, m0, t0)
     v1, c1, m2, bc1, l1 = neural_network(params, m1, t0 + 1)
 
     utility = lambda c: jnp.log(c)
     u = utility(c0)
-    uc = jax.grad(utility)(c0)
+    uc0 = jax.grad(utility)(c0)
+    uc1 = jax.lax.select(live_next, jax.grad(utility)(c1), 0.)
 
     vf = lambda m, t: neural_network(params, m, t)[0]
     v0m = jax.grad(vf, 0)(m0, t0)
     v1m = jax.grad(vf, 1)(m1, t0 + 1)
 
-    live_next = jnp.int32(t0 < econ_config['T'])
-    loss_euler = (((econ_config['beta'] * l1) / l0) - 1) * live_next
+    # loss_euler = (((econ_config['beta'] * uc1) / uc0) - 1) * live_next
+    loss_euler = ((c1 / (econ_config['beta'] * c0)) - 1) * jnp.int32(live_next)
     loss_bellman = ((u + econ_config['beta'] * v1) - v0)
-    loss_focm1 = (((econ_config['beta'] * v1m) / l0) - 1)
-    loss_focm0 = ((l0 / v0m) - 1)
+    loss_focm1 = 0 # (((econ_config['beta'] * v1m) / l0) - 1) * live_next
+    loss_focm0 = (v0m * c0 - 1)
     loss_value = 0 # u + econ_config['beta'] * v1
-    loss_focc = (uc / l0) - 1
+    loss_focc = 0 # (uc / l0) - 1
 
     return loss_bellman, loss_value, loss_focc, loss_focm1, loss_focm0, loss_euler
 
@@ -89,7 +94,7 @@ def loss(params, m0, t0, key):
 @jax.jit
 def batch_loss(params, m0, t0, keys):
     loss_bellman, loss_value, loss_focc, loss_focm1, loss_focm0, loss_euler = jax.vmap(loss, in_axes=(None, 0, 0, None))(params, m0, t0, keys[0])
-    return jnp.log(jnp.mean(loss_bellman**2 - loss_value**2 + loss_focc**2 + loss_focm1**2 + loss_focm0**2 + loss_euler**2)), \
+    return jnp.mean(loss_bellman**2 - loss_value**2 + loss_focc**2 + loss_focm1**2 + loss_focm0**2 + loss_euler**2), \
            {'loss_bellman': jnp.mean(loss_bellman ** 2), 'loss_value': jnp.mean(loss_value ** 2), 'loss_focc': jnp.mean(loss_focc ** 2),
             'loss_focm1': jnp.mean(loss_focm1 ** 2), 'loss_focm0': jnp.mean(loss_focm0 ** 2), 'loss_euler': jnp.mean(loss_euler ** 2)}
 
@@ -135,7 +140,7 @@ def training_loop(opt_state, tol=1e-5, max_iter=10 ** 4, batch_size=32):
     key = jax.random.PRNGKey(np.random.randint(1, int(1e8)))
     val_loss = jnp.inf
     grad = {'0': jnp.inf}
-    opt_init, opt_update, get_params = adam(step_size=ml_config['step_size'])
+    opt_init, opt_update, get_params = optimizer(step_size=ml_config['step_size'])
     params = get_params(opt_state)
 
     m = jnp.linspace(1e-10, 2, 101)
@@ -174,7 +179,7 @@ def training_loop(opt_state, tol=1e-5, max_iter=10 ** 4, batch_size=32):
 
 
 def main():
-    opt_init, opt_update, get_params = adam(step_size=ml_config['step_size'])
+    opt_init, opt_update, get_params = optimizer(step_size=ml_config['step_size'])
     if ml_config['train_new']:
         opt_state = opt_init(params0)
     else:
